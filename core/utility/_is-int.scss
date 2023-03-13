@@ -50,18 +50,21 @@
 		// значение `false`:
 		$-is-int: false;
 
+		// Шаблон сообщения об ошибке:
+		$-log-message: ' Значение «#{$value}» не соответствует типу `Number`!';
+
 		// Также выводим сообщение об ошибке в консоль:
 		@if config.$setting--strict-mode == true {
 
 			// Если включен Strict Mode, то выводим сообщение
 			// об ошибке директивой `@error`:
-			@error #{config.$string--emoji_error} + ' Значение «#{$value}» не соответствует типу `Number`!';
+			@error #{config.$string--emoji_error} + $-log-message;
 
 		} @else {
 
 			// Если выключен Strict Mode, то выводим сообщение
 			// об ошибке директивой `@warn`:
-			@warn #{config.$string--emoji_debug} + ' Значение «#{$value}» не соответствует типу `Number`!';
+			@warn #{config.$string--emoji_debug} + $-log-message;
 
 		}
 
