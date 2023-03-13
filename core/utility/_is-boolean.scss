@@ -1,3 +1,5 @@
+@use '../../config' as config;
+
 /// Функция `is-boolean` проверяет соответствие значения
 /// типу `Boolean` и возвращает `true` или `false`.
 ///
@@ -10,7 +12,7 @@
 /// @link https://github.com/takamoso GitHub
 /// @example scss Пример использования в Sass (SCSS)
 ///   $boolean: true;
-///   $number: 1310;
+///   $Boolean: 1310;
 ///   $string: "Sassify";
 ///   $list: 1 2 3 4 5;
 ///   $map: (
@@ -22,7 +24,7 @@
 ///   $color: #fff;
 ///
 ///   @debug is-boolean($boolean); //=> true
-///   @debug is-boolean($number); //=> false
+///   @debug is-boolean($Boolean); //=> false
 ///   @debug is-boolean($string); //=> false
 ///   @debug is-boolean($list); //=> false
 ///   @debug is-boolean($map); //=> false
@@ -31,7 +33,47 @@
 /// @return {Boolean} является ли переданное значение булевым?
 /// @param {*} $value - значение, которое необходимо проверить на соответствие типу `Boolean`
 @function is-boolean($value) {
-	@return type-of($value) == bool;
+
+	// Создаем пустую переменную, которой потом
+	// будем присваивать значение.
+	$-is-boolean: null;
+
+	@if type-of($value) == bool {
+
+		// Если значение `$value` соответствует типу
+		// `Boolean`, то присваиваем переменной `$-is-boolean`
+		// значение `true`:
+		$-is-boolean: true;
+
+	} @else {
+
+		// Если значение `$value` не соответствует типу
+		// `Boolean`, то присваиваем переменной `$-is-boolean`
+		// значение `false`:
+		$-is-boolean: false;
+
+		// Шаблон сообщения об ошибке:
+		$-log-message: ' Значение «#{$value}» не соответствует типу `Boolean`!';
+
+		// Также выводим сообщение об ошибке в консоль:
+		@if config.$setting--strict-mode == true {
+
+			// Если включен Strict Mode, то выводим сообщение
+			// об ошибке директивой `@error`:
+			@error #{config.$string--emoji_error} + $-log-message;
+
+		} @else {
+
+			// Если выключен Strict Mode, то выводим сообщение
+			// об ошибке директивой `@warn`:
+			@warn #{config.$string--emoji_debug} + $-log-message;
+
+		}
+
+	}
+
+	@return $-is-boolean;
+
 }
 
 /// Функция `is-bool` является алиасом функции
@@ -45,7 +87,7 @@
 /// @link https://github.com/takamoso GitHub
 /// @example scss Пример использования в Sass (SCSS)
 /// 	$boolean: true;
-/// 	$number: 1310;
+/// 	$Boolean: 1310;
 /// 	$string: "Sassify";
 /// 	$list: 1 2 3 4 5;
 /// 	$map: (
@@ -57,7 +99,7 @@
 /// 	$color: #fff;
 ///
 /// 	@debug is-bool($boolean); //=> true
-/// 	@debug is-bool($number); //=> false
+/// 	@debug is-bool($Boolean); //=> false
 /// 	@debug is-bool($string); //=> false
 /// 	@debug is-bool($list); //=> false
 /// 	@debug is-bool($map); //=> false
@@ -66,5 +108,5 @@
 /// @return {Boolean} является ли переданное значение булевым?
 /// @param {String | Boolean} $value - значение, которое необходимо проверить на соответствие типу `Boolean`
 @function is-bool($value) {
-	@return type-of($value) == bool;
+	@return is-boolean($value);
 }
