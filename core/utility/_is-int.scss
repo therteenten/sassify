@@ -1,5 +1,7 @@
+@use '../../config' as config;
+
 /// Функция `is-int` проверяет значение на соответствие
-/// типу `Integer` и возращает `true` или `false`.
+/// типу `Number` и возращает `true` или `false`.
 /// ---
 /// @name is-int
 /// @since 7.0.0
@@ -27,7 +29,44 @@
 /// 	@debug is-int($null); //=> false
 /// 	@debug is-int($color); //=> false
 /// @return {Boolean} является ли переданное значение числом?
-/// @param {*} $value - значение, которое необходимо проверить на соответствие типу `Integer`
+/// @param {Number} $value - значение, которое необходимо проверить на соответствие типу `Number`
 @function is-int($value) {
-	@return type-of($value) == number;
+
+	// Создаем пустую переменную, которой потом
+	// будем присваивать значение.
+	$-is-int: null;
+
+	@if type-of($value) == number {
+
+		// Если значение `$value` соответствует типу
+		// `Number`, то присваиваем переменной `$-is-int`
+		// значение `true`:
+		$-is-int: true;
+
+	} @else {
+
+		// Если значение `$value` не соответствует типу
+		// `Number`, то присваиваем переменной `$-is-int`
+		// значение `false`:
+		$-is-int: false;
+
+		// Также выводим сообщение об ошибке в консоль:
+		@if config.$setting--strict-mode == true {
+
+			// Если включен Strict Mode, то выводим сообщение
+			// об ошибке директивой `@error`:
+			@error #{config.$string--emoji_error} + ' Значение «#{$value}» не соответствует типу `Number`!';
+
+		} @else {
+
+			// Если выключен Strict Mode, то выводим сообщение
+			// об ошибке директивой `@warn`:
+			@warn #{config.$string--emoji_debug} + ' Значение «#{$value}» не соответствует типу `Number`!';
+
+		}
+
+	}
+
+	@return $-is-int;
+
 }
